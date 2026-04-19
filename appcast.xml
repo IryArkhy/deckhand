@@ -8,6 +8,21 @@
     <description>Deckhand release notes</description>
     <language>en</language>
     <item>
+      <title>Version 0.1.2</title>
+      <sparkle:version>0.1.2</sparkle:version>
+      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <pubDate>Sun, 19 Apr 2026 16:53:15 +0000</pubDate>
+      <sparkle:minimumSystemVersion>12.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[Automatic updates via Sparkle — Deckhand will now notify you when new versions are available and update itself.]]></description>
+      <enclosure
+        url="https://github.com/IryArkhy/deckhand/releases/download/v0.1.2/Deckhand-v0.1.2.zip"
+        sparkle:version="0.1.2"
+        sparkle:shortVersionString="0.1.2"
+        length="13994501"
+        type="application/octet-stream"
+        sparkle:edSignature="yY7dG86kba2pky214cfEUELCI0E6L7aoQqfzLSgGre7aCLesGUlzjEULyGGxZwNyLvrluKlKz2nHcdfmf2MbCg=="/>
+    </item>
+    <item>
       <title>Version 0.1.1</title>
       <sparkle:version>0.1.1</sparkle:version>
       <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
