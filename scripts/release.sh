@@ -61,9 +61,11 @@ PYEOF
 
 echo "Updated ${APPCAST}"
 
-# --- Commit and push appcast ---
+# --- Commit all staged source changes + appcast and push ---
 git add "${APPCAST}"
-git commit -m "release: update appcast for ${VERSION}"
+# Stage any other tracked files that were modified (e.g. README, source)
+git add -u
+git commit -m "release: ${VERSION}"
 git push
 
 # --- Create GitHub release ---
