@@ -1,3 +1,4 @@
+import os
 import traceback
 from pathlib import Path
 
@@ -11,16 +12,44 @@ _ICON = str(Path(__file__).parent / "assets" / "icon.png")
 class DeckhAndApp(rumps.App):
     def __init__(self) -> None:
         super().__init__("", icon=_ICON, template=True, quit_button="Quit")
+        self._updater_controller = None
         self._last_synced = rumps.MenuItem("Never synced")
         self._last_synced.set_callback(None)
         self.menu = [
             rumps.MenuItem("Sync Now", callback=self.on_sync_now),
             None,
+            rumps.MenuItem("Check for Updates\u2026", callback=self.on_check_updates),
             rumps.MenuItem("View Log", callback=self.on_view_log),
             rumps.MenuItem("Change Sync Folder\u2026", callback=self.on_change_folder),
             None,
             self._last_synced,
         ]
+        self._init_sparkle()
+
+    def _init_sparkle(self) -> None:
+        """Load Sparkle.framework from the app bundle and start the auto-updater."""
+        try:
+            from Foundation import NSBundle
+            import objc
+
+            frameworks_path = NSBundle.mainBundle().privateFrameworksPath()
+            sparkle_path = os.path.join(frameworks_path, "Sparkle.framework")
+            sparkle_bundle = NSBundle.bundleWithPath_(sparkle_path)
+
+            if sparkle_bundle and sparkle_bundle.load():
+                SPUStandardUpdaterController = objc.lookUpClass("SPUStandardUpdaterController")
+                # Keep a strong reference — GC will kill it otherwise
+                self._updater_controller = (
+                    SPUStandardUpdaterController
+                    .alloc()
+                    .initWithUpdaterDelegate_userDriverDelegate_(None, None)
+                )
+        except Exception:
+            pass  # Running outside bundle (dev mode) — gracefully skip
+
+    def on_check_updates(self, _: rumps.MenuItem) -> None:
+        if self._updater_controller:
+            self._updater_controller.checkForUpdates_(None)
 
     def on_sync_now(self, _: rumps.MenuItem) -> None:
         try:
