@@ -8,6 +8,21 @@
     <description>Deckhand release notes</description>
     <language>en</language>
     <item>
+      <title>Version 0.1.3</title>
+      <sparkle:version>0.1.3</sparkle:version>
+      <sparkle:shortVersionString>0.1.3</sparkle:shortVersionString>
+      <pubDate>Sun, 19 Apr 2026 17:12:42 +0000</pubDate>
+      <sparkle:minimumSystemVersion>12.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[Fix app crash on launch — icon and assets now correctly bundled with PyInstaller]]></description>
+      <enclosure
+        url="https://github.com/IryArkhy/deckhand/releases/download/v0.1.3/Deckhand-v0.1.3.zip"
+        sparkle:version="0.1.3"
+        sparkle:shortVersionString="0.1.3"
+        length="7694603"
+        type="application/octet-stream"
+        sparkle:edSignature="WaseqMNaylKoeQ+AABRgIJKhJubg5lvxfTabg8e58pGUPDwTG80hVeQOI9lvJFYqQ09YAjrx1y3nPD84zDPwDA=="/>
+    </item>
+    <item>
       <title>Version 0.1.2</title>
       <sparkle:version>0.1.2</sparkle:version>
       <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
