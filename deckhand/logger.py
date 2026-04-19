@@ -7,7 +7,7 @@ MAX_LINES = 500
 
 
 def write(level: str, message: str) -> None:
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     line = f"{timestamp}  {level:<6} {message}\n"
     existing = LOG_FILE.read_text().splitlines(keepends=True) if LOG_FILE.exists() else []

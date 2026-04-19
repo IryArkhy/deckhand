@@ -1,3 +1,4 @@
+import re
 import pytest
 
 
@@ -7,6 +8,7 @@ def test_info_writes_timestamped_line(isolated_env):
     content = (isolated_env / "deckhand.log").read_text()
     assert "INFO" in content
     assert "hello world" in content
+    assert re.search(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", content)
 
 
 def test_error_writes_error_level(isolated_env):
@@ -15,6 +17,7 @@ def test_error_writes_error_level(isolated_env):
     content = (isolated_env / "deckhand.log").read_text()
     assert "ERROR" in content
     assert "something broke" in content
+    assert re.search(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", content)
 
 
 def test_log_lines_are_capped_at_max(isolated_env, monkeypatch):
