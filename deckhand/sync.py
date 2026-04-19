@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import subprocess
 import time
 from pathlib import Path
@@ -70,10 +72,21 @@ def run(on_need_folder: Callable[[], Optional[str]]) -> dict:
         exported.append(deck)
         logger.info(f"Exported: {deck}")
 
+    # Remove Drive files that no longer match any local deck (renamed/deleted decks)
+    current_filenames = {
+        Path(drive.apkg_path_for_deck(folder, d)).name for d in local_decks
+    }
+    removed: list[str] = []
+    for apkg in drive.list_apkg_files(folder):
+        if Path(apkg).name not in current_filenames:
+            Path(apkg).unlink()
+            removed.append(Path(apkg).stem)
+            logger.info(f"Removed stale Drive file: {Path(apkg).name}")
+
     # Push merged state to AnkiWeb
     ankiconnect.sync()
     logger.info("AnkiWeb sync complete")
 
-    summary = f"Done — {len(imported)} imported, {len(exported)} exported"
+    summary = f"Done — {len(imported)} imported, {len(exported)} exported, {len(removed)} stale removed"
     logger.info(summary)
-    return {"imported": imported, "exported": exported}
+    return {"imported": imported, "exported": exported, "removed": removed}

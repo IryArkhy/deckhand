@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import os
+import sys
 import traceback
 from pathlib import Path
 
@@ -6,7 +9,18 @@ import rumps
 
 from deckhand import config, logger, sync
 
-_ICON = str(Path(__file__).parent / "assets" / "icon.png")
+
+def _asset(name: str) -> str:
+    """Return absolute path to a bundled asset, works both frozen and in dev."""
+    if getattr(sys, "frozen", False):
+        # PyInstaller extracts --add-data files relative to sys._MEIPASS
+        base = Path(sys._MEIPASS)
+    else:
+        base = Path(__file__).parent
+    return str(base / "assets" / name)
+
+
+_ICON = _asset("icon.png")
 
 
 class DeckhAndApp(rumps.App):
@@ -56,10 +70,14 @@ class DeckhAndApp(rumps.App):
             result = sync.run(on_need_folder=self._pick_folder)
             n_in = len(result["imported"])
             n_out = len(result["exported"])
+            n_rm = len(result.get("removed", []))
+            parts = [f"{n_in} imported", f"{n_out} exported"]
+            if n_rm:
+                parts.append(f"{n_rm} stale removed")
             rumps.notification(
                 title="Deckhand",
                 subtitle="Sync complete",
-                message=f"{n_in} imported, {n_out} exported",
+                message=", ".join(parts),
             )
             self._last_synced.title = "Last synced: just now"
         except RuntimeError as exc:

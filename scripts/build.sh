@@ -27,12 +27,17 @@ if [ ! -d "${SPARKLE_FRAMEWORK}" ]; then
 fi
 
 # --- Build the .app bundle ---
-pip install pyinstaller
-pyinstaller \
+pip3 install pyinstaller
+PYINSTALLER=$(python3 -m site --user-base)/bin/pyinstaller
+"${PYINSTALLER}" \
   --name "${APP_NAME}" \
   --windowed \
   --onedir \
   --noconfirm \
+  --icon "deckhand/assets/AppIcon.icns" \
+  --add-data "deckhand/assets:assets" \
+  --hidden-import rumps \
+  --hidden-import requests \
   deckhand/__main__.py
 
 # --- Bundle Sparkle.framework ---

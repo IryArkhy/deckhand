@@ -74,3 +74,19 @@ gh release create "${VERSION}" "${ZIP_NAME}" \
 
 echo ""
 echo "Released: https://github.com/IryArkhy/deckhand/releases/tag/${VERSION}"
+
+# --- Update Homebrew cask ---
+echo "Updating Homebrew cask..."
+CASK_DIR="/tmp/homebrew-deckhand"
+if [ ! -d "${CASK_DIR}/.git" ]; then
+  git clone https://github.com/IryArkhy/homebrew-deckhand.git "${CASK_DIR}"
+fi
+cd "${CASK_DIR}" && git pull
+SHA=$(shasum -a 256 "${OLDPWD}/${ZIP_NAME}" | cut -d' ' -f1)
+sed -i '' "s/version \".*\"/version \"${VERSION#v}\"/" Casks/deckhand.rb
+sed -i '' "s/sha256 \".*\"/sha256 \"${SHA}\"/" Casks/deckhand.rb
+git add Casks/deckhand.rb
+git commit -m "release: bump cask to ${VERSION}"
+git push
+cd "${OLDPWD}"
+echo "Homebrew cask updated"
