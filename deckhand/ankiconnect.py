@@ -8,7 +8,7 @@ def _invoke(action: str, **params) -> object:
     response = requests.post(BASE_URL, json=payload, timeout=10)
     response.raise_for_status()
     result = response.json()
-    if result.get("error"):
+    if result.get("error") is not None:
         raise RuntimeError(f"AnkiConnect error: {result['error']}")
     return result["result"]
 
