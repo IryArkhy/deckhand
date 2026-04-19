@@ -31,7 +31,7 @@ class DeckhAndApp(rumps.App):
             )
             self._last_synced.title = "Last synced: just now"
         except RuntimeError as exc:
-            logger.error(str(exc))
+            logger.error(traceback.format_exc())
             rumps.notification(
                 title="Deckhand",
                 subtitle="Sync failed",
