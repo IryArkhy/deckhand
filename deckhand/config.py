@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-from typing import Optional
 
 CONFIG_DIR = Path.home() / ".deckhand"
 CONFIG_FILE = CONFIG_DIR / "config.json"
@@ -9,7 +8,10 @@ CONFIG_FILE = CONFIG_DIR / "config.json"
 def load() -> dict:
     if not CONFIG_FILE.exists():
         return {}
-    return json.loads(CONFIG_FILE.read_text())
+    try:
+        return json.loads(CONFIG_FILE.read_text())
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
 def save(data: dict) -> None:
@@ -17,7 +19,7 @@ def save(data: dict) -> None:
     CONFIG_FILE.write_text(json.dumps(data, indent=2))
 
 
-def get_drive_folder() -> Optional[str]:
+def get_drive_folder() -> str | None:
     return load().get("drive_folder")
 
 
