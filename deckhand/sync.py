@@ -1,4 +1,3 @@
-import os
 import subprocess
 import time
 from pathlib import Path
@@ -38,7 +37,7 @@ def run(on_need_folder: Callable[[], Optional[str]]) -> dict:
         subprocess.Popen(["open", "-a", "Anki"])
         if not _wait_for_ankiconnect():
             raise RuntimeError(
-                "Anki did not start within 30 seconds. Please open Anki manually and try again."
+                f"Anki did not start within {LAUNCH_TIMEOUT} seconds. Please open Anki manually and try again."
             )
         logger.info("AnkiConnect ready")
 
