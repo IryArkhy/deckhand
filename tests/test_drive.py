@@ -29,6 +29,8 @@ def test_apkg_path_for_deck_replaces_sep_in_name(tmp_path):
     import os
     result = drive.apkg_path_for_deck(str(tmp_path), "Japanese::Vocab")
     assert os.sep not in Path(result).name
+    assert ":" not in Path(result).name
+    assert Path(result).name == "Japanese__Vocab.apkg"
 
 
 def test_get_folder_path_returns_saved_path(isolated_env):
@@ -39,7 +41,8 @@ def test_get_folder_path_returns_saved_path(isolated_env):
     assert drive.get_folder_path() == folder
 
 
-def test_get_folder_path_returns_none_when_saved_path_missing(isolated_env):
+def test_get_folder_path_returns_none_when_saved_path_missing(isolated_env, monkeypatch):
+    monkeypatch.setattr("deckhand.drive.CANDIDATE_PATTERNS", [str(isolated_env / "nonexistent-*")])
     from deckhand import config, drive
     config.set_drive_folder("/nonexistent/path")
     assert drive.get_folder_path() is None
