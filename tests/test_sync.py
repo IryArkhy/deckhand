@@ -57,11 +57,15 @@ def test_sync_raises_on_launch_timeout(isolated_env, monkeypatch):
 
     with patch("deckhand.ankiconnect.ping", return_value=False), \
          patch("deckhand.sync.subprocess.Popen"), \
-         patch("deckhand.sync.time.sleep"):
+         patch("deckhand.sync.time.sleep"), \
+         patch("deckhand.drive.get_folder_path") as mock_folder, \
+         patch("deckhand.ankiconnect.sync") as mock_sync:
 
         from deckhand import sync
         with pytest.raises(RuntimeError, match="did not start"):
             sync.run(on_need_folder=lambda: None)
+        mock_folder.assert_not_called()
+        mock_sync.assert_not_called()
 
 
 def test_sync_raises_when_folder_picker_cancelled(isolated_env):
@@ -79,6 +83,7 @@ def test_sync_calls_on_need_folder_when_not_detected(isolated_env):
 
     with patch("deckhand.ankiconnect.ping", return_value=True), \
          patch("deckhand.drive.get_folder_path", return_value=None), \
+         patch("deckhand.drive.list_apkg_files", return_value=[]), \
          patch("deckhand.ankiconnect.get_deck_names", return_value=[]), \
          patch("deckhand.ankiconnect.import_package"), \
          patch("deckhand.ankiconnect.export_package"), \
