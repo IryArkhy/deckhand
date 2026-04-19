@@ -1,13 +1,16 @@
 import traceback
+from pathlib import Path
 
 import rumps
 
 from deckhand import config, logger, sync
 
+_ICON = str(Path(__file__).parent / "assets" / "icon.png")
+
 
 class DeckhAndApp(rumps.App):
     def __init__(self) -> None:
-        super().__init__("Deckhand", icon=None, quit_button="Quit")
+        super().__init__("", icon=_ICON, template=True, quit_button="Quit")
         self._last_synced = rumps.MenuItem("Never synced")
         self._last_synced.set_callback(None)
         self.menu = [
